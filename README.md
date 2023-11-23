@@ -1,1 +1,1 @@
-# fmi-get-temp
+# FMI get temperature
