@@ -12,23 +12,22 @@ async fn main() -> anyhow::Result<()> {
     opts.start_pgm(env!("CARGO_BIN_NAME"));
 
     let url = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&place=Pirkkala&parameters=t2m&starttime=2023-11-23T19:00:00Z";
+    info!("Getting url {url}");
+
     let (body, ct) = get_text_body(url).await?.ok_or(anyhow!("No body!"))?;
-    // info!("Getting url {url}\nresult:\nContent-type: {ct}\n{body:?}");
+    debug!("result:\nContent-type: {ct}\n{body:?}");
 
     let xml = roxmltree::Document::parse(&body)?;
-    info!("Parsed XML:\n{xml:?}");
+    debug!("Parsed XML:\n{xml:?}");
 
-    let ser = xml
+    let tvp = xml
         .descendants()
         .find(|n| n.has_tag_name("MeasurementTimeseries") && n.has_children())
-        .ok_or(anyhow!("Cannot find time series"))?;
-    info!("Found time series:\n{ser:?}");
-
-    let tvp = ser
+        .ok_or(anyhow!("Cannot find time series"))?
         .descendants()
         .filter(|n| n.has_tag_name("MeasurementTVP"))
         .last()
-        .unwrap();
+        .ok_or(anyhow!("no measurements"))?;
 
     let time = tvp
         .children()
