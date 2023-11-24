@@ -8,7 +8,7 @@ use url::Url;
 const CONN_TIMEOUT: u64 = 5;
 const REQW_TIMEOUT: u64 = 10;
 
-pub async fn get_text_body<S>(url_s: S) -> anyhow::Result<Option<String>>
+pub async fn get_text_body<S>(url_s: S) -> anyhow::Result<Option<(String, String)>>
 where
     S: AsRef<str>,
 {
@@ -33,11 +33,12 @@ where
             .get(reqwest::header::CONTENT_TYPE)
             .ok_or(anyhow!("No content-type in response"))?
             .as_bytes(),
-    );
+    )
+    .to_string();
 
     if ct.starts_with("text/") {
         let body = resp.text().await?;
-        Ok(Some(body))
+        Ok(Some((body, ct)))
     } else {
         debug!("Content-type ignored: {ct:?}");
         Ok(None)

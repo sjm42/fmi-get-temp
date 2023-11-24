@@ -11,9 +11,55 @@ async fn main() -> anyhow::Result<()> {
     opts.finish()?;
     opts.start_pgm(env!("CARGO_BIN_NAME"));
 
-    let url = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&place=Pirkkala&parameters=t2m&starttime=2023-11-22T14:00:00Z";
-    let body = get_text_body(url).await?.ok_or(anyhow!("No body!"))?;
-    info!("Getting url {url}\nresult:\n{body:?}",);
+    let url = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&place=Pirkkala&parameters=t2m&starttime=2023-11-23T19:00:00Z";
+    let (body, ct) = get_text_body(url).await?.ok_or(anyhow!("No body!"))?;
+    // info!("Getting url {url}\nresult:\nContent-type: {ct}\n{body:?}");
+
+    let xml = roxmltree::Document::parse(&body)?;
+    info!("Parsed XML:\n{xml:?}");
+
+    let ser = xml
+        .descendants()
+        .find(|n| n.has_tag_name("MeasurementTimeseries") && n.has_children())
+        .ok_or(anyhow!("Cannot find time series"))?;
+    info!("Found time series:\n{ser:?}");
+
+    let tvp = ser
+        .descendants()
+        .filter(|n| n.has_tag_name("MeasurementTVP"))
+        .last()
+        .unwrap();
+
+    let time = tvp
+        .children()
+        .find(|n| n.is_element() && n.has_tag_name("time"))
+        .ok_or(anyhow!("no time"))?
+        .children()
+        .last()
+        .ok_or(anyhow!("no time"))?
+        .text()
+        .ok_or(anyhow!("no time"))?;
+    info!("time = {time}");
+
+    let value = tvp
+        .children()
+        .find(|n| n.is_element() && n.has_tag_name("value"))
+        .ok_or(anyhow!("no value"))?
+        .children()
+        .last()
+        .ok_or(anyhow!("no value"))?
+        .text()
+        .ok_or(anyhow!("no value"))?;
+    info!("value = {value}");
+
+    /*
+    for v in tvp.descendants() {
+        if v.is_text() {
+            info!("tvp node:\n{v:?}");
+        }
+    }
+    */
+
     Ok(())
 }
 
