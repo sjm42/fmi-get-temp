@@ -1,7 +1,9 @@
 // config.rs
 
 use log::*;
+use serde::{Deserialize, Serialize};
 use std::env;
+use std::{fs::File, io::BufReader};
 use structopt::StructOpt;
 
 #[derive(Debug, Clone, StructOpt)]
@@ -13,16 +15,13 @@ pub struct OptsCommon {
     #[structopt(short, long)]
     pub trace: bool,
 
-    #[structopt(short, long, default_value = "$HOME/sjmb/config/sjmb.json")]
-    pub bot_config: String,
-    #[structopt(short, long, default_value = "$HOME/sjmb/config/irc.toml")]
-    pub irc_config: String,
+    #[structopt(short, long, default_value = "$HOME/.config/fmi/config.json")]
+    pub fmi_config: String,
 }
 
 impl OptsCommon {
     pub fn finish(&mut self) -> anyhow::Result<()> {
-        self.bot_config = shellexpand::full(&self.bot_config)?.into_owned();
-        self.irc_config = shellexpand::full(&self.irc_config)?.into_owned();
+        self.fmi_config = shellexpand::full(&self.fmi_config)?.into_owned();
         Ok(())
     }
     pub fn get_loglevel(&self) -> LevelFilter {
@@ -51,6 +50,22 @@ impl OptsCommon {
         debug!("Git commit: {}", env!("GIT_COMMIT"));
         debug!("Source timestamp: {}", env!("SOURCE_TIMESTAMP"));
         debug!("Compiler version: {}", env!("RUSTC_VERSION"));
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct FmiConfig {
+    pub url_temp: String,
+    pub fmi_sid: String,
+}
+
+impl FmiConfig {
+    pub fn new(opts: &OptsCommon) -> anyhow::Result<Self> {
+        let file = &opts.fmi_config;
+        info!("Reading config file {file}");
+        let config: FmiConfig = serde_json::from_reader(BufReader::new(File::open(file)?))?;
+        debug!("New FmiConfig:\n{config:#?}");
+        Ok(config)
     }
 }
 
