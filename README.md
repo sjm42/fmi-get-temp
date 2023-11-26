@@ -1,7 +1,25 @@
 # FMI get temperature
 
-The program prints latest temperature reading to stdout if no options are given.
+The program will fetch the latest temperature reading from Ilmatieteen Laitos (FMI) at given location (by fmisid)
+and parse the received XML.
+
+Tt prints the most recent temperature reading to stdout if no options are given.
+
 Additionally, it can spit out the data with MQTT and/or CoAP if requested.
+
+A list of stations can be found here with fmisid values:
+
+<https://www.ilmatieteenlaitos.fi/havaintoasemat>
+
+Example values:
+
+* Helsinki-Vantaa lentoasema: fmisid 100968
+* Pirkkala lentoasema: fmisid 101118
+* Vaasa lentoasema: fmisid 101462
+* Oulu lentoasema: fmisid 101786
+* Rovaniemi lentoasema: fmisid 101920
+* Kittilä lentoasema: fmisid 101986
+* Salla Naruska: fmisid 101966
 
 ```
 
