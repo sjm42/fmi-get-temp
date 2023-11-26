@@ -1,11 +1,12 @@
 # FMI get temperature
 
-The program will fetch the latest temperature reading from Ilmatieteen Laitos (FMI) at given location (by fmisid)
-and parse the received XML.
+The program fetches the latest temperature readings from Ilmatieteen Laitos (FMI) at given location (by fmisid)
+and parses the received XML.
 
-Tt prints the most recent temperature reading to stdout if no options are given.
+It then prints the most recent temperature reading to stdout if no other options are given.
 
-Additionally, it can spit out the data with MQTT and/or CoAP if requested.
+Additionally, it can send the data with MQTT publish message and/or CoAP POST request
+if either or both of those options are enabled.
 
 A list of stations can be found here with fmisid values:
 
