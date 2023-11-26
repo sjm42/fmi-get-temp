@@ -8,8 +8,10 @@ pub use web_util::*;
 
 pub use anyhow::anyhow;
 pub use chrono::*;
+use coap::CoAPClient;
 pub use log::*;
 pub use rumqttc::{Event, EventLoop, MqttOptions, Packet, QoS};
+use std::fmt::Display;
 pub use structopt::StructOpt;
 
 pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
@@ -67,6 +69,24 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     info!("value = {value}");
 
     Ok(value.to_string())
+}
+
+pub fn coap_send<S1, S2, S3>(url: S1, key: S2, value: S3) -> anyhow::Result<()>
+where
+    S1: AsRef<str> + Display,
+    S2: AsRef<str> + Display,
+    S3: AsRef<str> + Display,
+{
+    let payload = format!("{key} {value}");
+    info!("*** CoAP POST {url} <-- {payload}");
+
+    let res = CoAPClient::post_with_timeout(
+        url.as_ref(),
+        payload.into_bytes(),
+        std::time::Duration::new(5, 0),
+    )?;
+    info!("<-- {res:?}");
+    Ok(())
 }
 
 // EOF

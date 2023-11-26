@@ -13,15 +13,6 @@ pub struct OptsCommon {
     #[structopt(short, long)]
     pub trace: bool,
 
-    #[structopt(long, short)]
-    pub mqtt_enabled: bool,
-    #[structopt(long, default_value = "localhost")]
-    pub mqtt_host: String,
-    #[structopt(long, default_value = "1883")]
-    pub mqtt_port: u16,
-    #[structopt(long, default_value = "fmi_temp")]
-    pub mqtt_topic: String,
-
     #[structopt(
         long,
         default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
@@ -38,6 +29,24 @@ pub struct OptsCommon {
     // Salla Naruska: fmisid 101966
     #[structopt(long, default_value = "101118")]
     pub fmi_sid: String,
+
+    // MQTT support
+    #[structopt(long, short)]
+    pub mqtt_enabled: bool,
+    #[structopt(long, default_value = "localhost")]
+    pub mqtt_host: String,
+    #[structopt(long, default_value = "1883")]
+    pub mqtt_port: u16,
+    #[structopt(long, default_value = "fmi_temp/101118")]
+    pub mqtt_topic: String,
+
+    // CoAP support
+    #[structopt(long, short)]
+    pub coap_enabled: bool,
+    #[structopt(long, default_value = "coap://localhost/store")]
+    pub coap_url: String,
+    #[structopt(long, default_value = "temperature")]
+    pub coap_key: String,
 }
 
 impl OptsCommon {

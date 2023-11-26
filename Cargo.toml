@@ -2,7 +2,7 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"
@@ -14,6 +14,11 @@ resolver = "2"
 
 
 [dependencies]
+anyhow = "1"
+coap = "0"
+chrono = "0"
+env_logger = "0"
+log = "0"
 reqwest = { version = "0", features = [
     "brotli",
     "deflate",
@@ -22,10 +27,6 @@ reqwest = { version = "0", features = [
     "rustls-tls",
     "trust-dns",
 ], default-features = false }
-anyhow = "1"
-chrono = "0"
-env_logger = "0"
-log = "0"
 roxmltree = "0"
 rumqttc = "0"
 serde = { version = "1", features = ["derive"] }
@@ -41,8 +42,8 @@ build-data = "0"
 
 
 [profile.release]
-lto = true
 opt-level = 3
+lto = true
 
 
 [profile.minsize]
