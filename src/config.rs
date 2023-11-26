@@ -31,7 +31,7 @@ pub struct OptsCommon {
     pub fmi_sid: String,
 
     // MQTT support
-    #[structopt(long, short)]
+    #[structopt(long)]
     pub mqtt_enabled: bool,
     #[structopt(long, default_value = "localhost")]
     pub mqtt_host: String,
@@ -41,7 +41,7 @@ pub struct OptsCommon {
     pub mqtt_topic: String,
 
     // CoAP support
-    #[structopt(long, short)]
+    #[structopt(long)]
     pub coap_enabled: bool,
     #[structopt(long, default_value = "coap://localhost/store")]
     pub coap_url: String,

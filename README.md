@@ -4,14 +4,15 @@ The program prints latest temperature reading to stdout if no options are given.
 Additionally, it can spit out the data with MQTT and/or CoAP if requested.
 
 ```
+
 USAGE:
     fmi_get_temp [FLAGS] [OPTIONS]
 
 FLAGS:
-    -c, --coap-enabled    
+        --coap-enabled    
     -d, --debug           
     -h, --help            Prints help information
-    -m, --mqtt-enabled    
+        --mqtt-enabled    
     -t, --trace           
     -V, --version         Prints version information
     -v, --verbose         
@@ -25,4 +26,5 @@ OPTIONS:
         --mqtt-host <mqtt-host>       [default: localhost]
         --mqtt-port <mqtt-port>       [default: 1883]
         --mqtt-topic <mqtt-topic>     [default: fmi_temp/101118]
+
 ```
