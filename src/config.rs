@@ -1,9 +1,7 @@
 // config.rs
 
 use log::*;
-use serde::{Deserialize, Serialize};
 use std::env;
-use std::{fs::File, io::BufReader};
 use structopt::StructOpt;
 
 #[derive(Debug, Clone, StructOpt)]
@@ -15,13 +13,35 @@ pub struct OptsCommon {
     #[structopt(short, long)]
     pub trace: bool,
 
-    #[structopt(short, long, default_value = "$HOME/.config/fmi/config.json")]
-    pub fmi_config: String,
+    #[structopt(long, short)]
+    pub mqtt_enabled: bool,
+    #[structopt(long, default_value = "localhost")]
+    pub mqtt_host: String,
+    #[structopt(long, default_value = "1883")]
+    pub mqtt_port: u16,
+    #[structopt(long, default_value = "fmi_temp")]
+    pub mqtt_topic: String,
+
+    #[structopt(
+        long,
+        default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
+    )]
+    pub fmi_url: String,
+
+    // https://www.ilmatieteenlaitos.fi/havaintoasemat
+    // Helsinki-Vantaa lentoasema: fmisid 100968
+    // Pirkkala lentoasema: fmisid 101118
+    // Vaasa lentoasema: fmisid 101462
+    // Oulu lentoasema: fmisid 101786
+    // Rovaniemi lentoasema: fmisid 101920
+    // Kittilä lentoasema: fmisid 101986
+    // Salla Naruska: fmisid 101966
+    #[structopt(long, default_value = "101118")]
+    pub fmi_sid: String,
 }
 
 impl OptsCommon {
     pub fn finish(&mut self) -> anyhow::Result<()> {
-        self.fmi_config = shellexpand::full(&self.fmi_config)?.into_owned();
         Ok(())
     }
     pub fn get_loglevel(&self) -> LevelFilter {
@@ -50,22 +70,6 @@ impl OptsCommon {
         debug!("Git commit: {}", env!("GIT_COMMIT"));
         debug!("Source timestamp: {}", env!("SOURCE_TIMESTAMP"));
         debug!("Compiler version: {}", env!("RUSTC_VERSION"));
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct FmiConfig {
-    pub url_temp: String,
-    pub fmi_sid: String,
-}
-
-impl FmiConfig {
-    pub fn new(opts: &OptsCommon) -> anyhow::Result<Self> {
-        let file = &opts.fmi_config;
-        info!("Reading config file {file}");
-        let config: FmiConfig = serde_json::from_reader(BufReader::new(File::open(file)?))?;
-        debug!("New FmiConfig:\n{config:#?}");
-        Ok(config)
     }
 }
 

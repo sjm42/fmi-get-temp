@@ -9,17 +9,18 @@ pub use web_util::*;
 pub use anyhow::anyhow;
 pub use chrono::*;
 pub use log::*;
+pub use rumqttc::{Event, EventLoop, MqttOptions, Packet, QoS};
 pub use structopt::StructOpt;
 
-pub async fn get_temp(fmi: &FmiConfig) -> anyhow::Result<String> {
+pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let starttime = Utc::now()
         .checked_sub_signed(Duration::minutes(15))
         .unwrap()
         .format("%Y-%m-%dT%H:%M:%SZ")
         .to_string();
-    let url = fmi
-        .url_temp
-        .replace("###FMI_SID###", &fmi.fmi_sid)
+    let url = opts
+        .fmi_url
+        .replace("###FMI_SID###", &opts.fmi_sid)
         .replace("###START_TIME###", &starttime);
 
     info!("Getting url {url}");
