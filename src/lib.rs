@@ -89,4 +89,33 @@ where
     Ok(())
 }
 
+pub async fn mqtt_send<S1, S2>(opts: &OptsCommon, client_id: S1, value: S2) -> anyhow::Result<()>
+where
+    S1: AsRef<str> + Display,
+    S2: AsRef<str> + Display,
+{
+    let mut mqttoptions = MqttOptions::new(client_id.as_ref(), &opts.mqtt_host, opts.mqtt_port);
+    mqttoptions
+        .set_keep_alive(std::time::Duration::from_secs(25))
+        .set_clean_session(false);
+
+    let msg = format!("{{ \"temperature\": {} }}", value.as_ref());
+    info!("Publish MQTT: {} <-- {}", opts.mqtt_topic, msg);
+    let (client, mut eventloop) = rumqttc::AsyncClient::new(mqttoptions, 42);
+    client
+        .publish(&opts.mqtt_topic, QoS::AtLeastOnce, false, msg)
+        .await?;
+
+    loop {
+        let ev = eventloop.poll().await.unwrap();
+        debug!("Received = {ev:#?}");
+        if let Event::Incoming(Packet::PubAck(_)) = ev {
+            debug!("Got ack, exit.");
+            break;
+        }
+    }
+    client.disconnect().await?;
+
+    Ok(())
+}
 // EOF

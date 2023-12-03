@@ -10,11 +10,6 @@ async fn main() -> anyhow::Result<()> {
 
     let t = get_temp(&opts).await?;
 
-    let mut mqttoptions = MqttOptions::new(env!("CARGO_BIN_NAME"), &opts.mqtt_host, opts.mqtt_port);
-    mqttoptions
-        .set_keep_alive(std::time::Duration::from_secs(25))
-        .set_clean_session(false);
-
     println!("{t}");
 
     if opts.coap_enabled {
@@ -31,24 +26,8 @@ async fn main() -> anyhow::Result<()> {
     }
 
     if opts.mqtt_enabled {
-        let msg = format!("{{ \"temperature\": {t} }}");
-        info!("Publish MQTT: {} <-- {}", opts.mqtt_topic, msg);
-        let (client, mut eventloop) = rumqttc::AsyncClient::new(mqttoptions, 42);
-        client
-            .publish(opts.mqtt_topic, QoS::AtLeastOnce, false, msg)
-            .await?;
-
-        loop {
-            let ev = eventloop.poll().await.unwrap();
-            debug!("Received = {ev:#?}");
-            if let Event::Incoming(p) = ev {
-                if let Packet::PubAck(_) = p {
-                    debug!("Got ack, exit.");
-                    break;
-                }
-            }
-        }
-        client.disconnect().await?;
+        let id = env!("CARGO_BIN_NAME");
+        mqtt_send(&opts, id, &t).await?;
     }
     Ok(())
 }
