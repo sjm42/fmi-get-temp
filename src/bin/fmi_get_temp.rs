@@ -1,10 +1,11 @@
 // bin/sjmb.rs
 
+use clap::Parser;
 use fmi_get_temp::*;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let mut opts = OptsCommon::from_args();
+    let mut opts = OptsCommon::parse();
     opts.finish()?;
     opts.start_pgm(env!("CARGO_BIN_NAME"));
 

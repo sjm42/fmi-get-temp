@@ -2,7 +2,7 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.2.1"
+version = "1.2.2"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"
@@ -15,6 +15,7 @@ resolver = "2"
 
 [dependencies]
 anyhow = "1"
+clap = { version = "4.4", features = ["derive"] }
 coap = "0"
 chrono = "0"
 env_logger = "0"
@@ -32,7 +33,6 @@ rumqttc = "0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 shellexpand = { version = "3", features = ["full"] }
-structopt = "0"
 tokio = { version = "1", features = ["full"] }
 url = "2"
 
