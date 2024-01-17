@@ -8,7 +8,7 @@ pub use web_util::*;
 
 pub use anyhow::anyhow;
 pub use chrono::*;
-use coap::CoAPClient;
+use coap::client::{CoAPClient, UdpTransport};
 pub use log::*;
 pub use rumqttc::{Event, EventLoop, MqttOptions, Packet, QoS};
 use std::fmt::Display;
@@ -70,7 +70,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     Ok(value.to_string())
 }
 
-pub fn coap_send<S1, S2, S3>(url: S1, key: S2, value: S3) -> anyhow::Result<()>
+pub async fn coap_send<S1, S2, S3>(url: S1, key: S2, value: S3) -> anyhow::Result<()>
 where
     S1: AsRef<str> + Display,
     S2: AsRef<str> + Display,
@@ -79,11 +79,12 @@ where
     let payload = format!("{key} {value}");
     info!("*** CoAP POST {url} <-- {payload}");
 
-    let res = CoAPClient::post_with_timeout(
+    let res = CoAPClient::<UdpTransport>::post_with_timeout(
         url.as_ref(),
         payload.into_bytes(),
         std::time::Duration::new(5, 0),
-    )?;
+    )
+    .await?;
     info!("<-- {res:?}");
     Ok(())
 }

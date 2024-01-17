@@ -14,16 +14,7 @@ async fn main() -> anyhow::Result<()> {
     println!("{t}");
 
     if opts.coap_enabled {
-        let url = opts.coap_url.clone();
-        let key = opts.coap_key.clone();
-        let val = t.clone();
-
-        // Spawn a separate task for handling the CoAP stuff to avoid blocking main loop
-        tokio::task::spawn_blocking(move || {
-            if let Err(e) = coap_send(url, key, val) {
-                error!("Message handling error: {e}");
-            }
-        });
+        coap_send(&opts.coap_url, &opts.coap_key, &t).await?;
     }
 
     if opts.mqtt_enabled {

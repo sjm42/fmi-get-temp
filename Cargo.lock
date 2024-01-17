@@ -300,15 +300,17 @@ checksum = "702fc72eb24e5a1e48ce58027a675bc24edd52096d5397d4aea7c6dd9eca0bd1"
 
 [[package]]
 name = "coap"
-version = "0.12.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e06c3bc15fdf60267be42093e2277704d112ee5f659e4ffe8e4db54ef105b208"
+checksum = "96a20934c10c8c410e4c4e6139c0dba2274bc27ea82c25da0b4abc5ecf76a8bb"
 dependencies = [
+ "async-trait",
  "bytes",
  "coap-lite",
  "futures",
  "log",
  "lru_time_cache",
+ "mio",
  "num-derive",
  "num-traits",
  "regex",
@@ -321,9 +323,9 @@ dependencies = [
 
 [[package]]
 name = "coap-lite"
-version = "0.9.1"
+version = "0.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b4859ead43cef7e14593c5238cb3dd8800f41ade206bdf08c44c51f2d943fd3"
+checksum = "25ca11cbc756cf12eb24824285dbe36d97e4cfea404aaa1240477f3ae091f779"
 dependencies = [
  "lru_time_cache",
 ]
@@ -459,7 +461,7 @@ dependencies = [
 
 [[package]]
 name = "fmi_get_temp"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "anyhow",
  "build-data",
@@ -911,11 +913,12 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "0.8.10"
+version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f3d0b296e374a4e6f3c7b0a1f5a51d748a0d34c85e7dc48fc3fa9a87657fe09"
+checksum = "927a765cd3fc26206e66b296465fa9d3e5ab003e651c1b3c060e7956d96b19d2"
 dependencies = [
  "libc",
+ "log",
  "wasi",
  "windows-sys 0.48.0",
 ]
@@ -1588,9 +1591,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.35.1"
+version = "1.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c89b4efa943be685f629b149f53829423f8f5531ea21249408e8e2f8671ec104"
+checksum = "4f38200e3ef7995e5ef13baec2f432a6da0aa9ac495b2c0e8f3b7eec2c92d653"
 dependencies = [
  "backtrace",
  "bytes",
@@ -1607,9 +1610,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-macros"
-version = "2.2.0"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b8a1e28f2deaa14e508979454cb3a223b10b938b45af148bc0986de36f1923b"
+checksum = "630bdcf245f78637c13ec01ffae6187cca34625e8c63150d424b59e55af2675e"
 dependencies = [
  "proc-macro2",
  "quote",
