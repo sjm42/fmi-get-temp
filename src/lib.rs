@@ -70,12 +70,16 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     Ok(value.to_string())
 }
 
-pub async fn coap_send<S1, S2, S3>(url: S1, key: S2, value: S3) -> anyhow::Result<()>
+pub async fn coap_send<S1, S2, S3>(enabled: bool, url: S1, key: S2, value: S3) -> anyhow::Result<()>
 where
     S1: AsRef<str> + Display,
     S2: AsRef<str> + Display,
     S3: AsRef<str> + Display,
 {
+    if !enabled {
+        return Ok(());
+    }
+
     let payload = format!("{key} {value}");
     info!("*** CoAP POST {url} <-- {payload}");
 
@@ -89,11 +93,20 @@ where
     Ok(())
 }
 
-pub async fn mqtt_send<S1, S2>(opts: &OptsCommon, client_id: S1, value: S2) -> anyhow::Result<()>
+pub async fn mqtt_send<S1, S2>(
+    enabled: bool,
+    opts: &OptsCommon,
+    client_id: S1,
+    value: S2,
+) -> anyhow::Result<()>
 where
     S1: AsRef<str> + Display,
     S2: AsRef<str> + Display,
 {
+    if !enabled {
+        return Ok(());
+    }
+
     let mut mqttoptions = MqttOptions::new(client_id.as_ref(), &opts.mqtt_host, opts.mqtt_port);
     mqttoptions
         .set_keep_alive(std::time::Duration::from_secs(25))
