@@ -116,7 +116,7 @@ where
         mqttoptions.set_credentials(username, password);
     }
 
-    let msg = format!("{{ \"temperature\": {} }}", value.as_ref());
+    let msg = format!("{{ \"temperature\": \"{}\" }}", value.as_ref());
     info!("Publish MQTT: {} <-- {}", opts.mqtt_topic, msg);
     let (client, mut eventloop) = rumqttc::AsyncClient::new(mqttoptions, 42);
     client
