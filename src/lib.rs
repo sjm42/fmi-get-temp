@@ -120,7 +120,7 @@ where
     info!("Publish MQTT: {} <-- {}", opts.mqtt_topic, msg);
     let (client, mut eventloop) = rumqttc::AsyncClient::new(mqttoptions, 42);
     client
-        .publish(&opts.mqtt_topic, QoS::AtLeastOnce, false, msg)
+        .publish(&opts.mqtt_topic, QoS::AtLeastOnce, true, msg)
         .await?;
 
     loop {
