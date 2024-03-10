@@ -15,7 +15,7 @@ use std::fmt::Display;
 
 pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let starttime = Utc::now()
-        .checked_sub_signed(Duration::minutes(opts.fmi_mins))
+        .checked_sub_signed(Duration::try_minutes(opts.fmi_mins).unwrap_or_default())
         .unwrap()
         .format("%Y-%m-%dT%H:%M:%SZ")
         .to_string();
