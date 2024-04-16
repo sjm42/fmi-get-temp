@@ -68,8 +68,10 @@ impl OptsCommon {
             Level::TRACE
         } else if self.debug {
             Level::DEBUG
-        } else {
+        } else if self.verbose {
             Level::INFO
+        } else {
+            Level::ERROR
         }
     }
 
