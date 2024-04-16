@@ -9,7 +9,7 @@ async fn main() -> anyhow::Result<()> {
     let me = env!("CARGO_BIN_NAME");
     let mut opts = OptsCommon::parse();
     opts.finalize()?;
-    opts.start_pgm();
+    opts.start_pgm(me);
 
     let t = get_temp(&opts).await?;
     println!("{t}");

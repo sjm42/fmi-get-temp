@@ -73,15 +73,14 @@ impl OptsCommon {
         }
     }
 
-    pub fn start_pgm(&self) {
+    pub fn start_pgm(&self, name: &str) {
         tracing_subscriber::fmt()
             .with_max_level(self.get_loglevel())
             .with_target(false)
             .init();
 
         info!(
-            "Starting up {} v{}...",
-            env!("CARGO_PKG_NAME"),
+            "Starting up {name} v{}...",
             env!("CARGO_PKG_VERSION")
         );
         debug!("Git branch: {}", env!("GIT_BRANCH"));
@@ -90,5 +89,4 @@ impl OptsCommon {
         debug!("Compiler version: {}", env!("RUSTC_VERSION"));
     }
 }
-
 // EOF
