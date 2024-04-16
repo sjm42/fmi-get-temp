@@ -1,17 +1,19 @@
 // lib.rs
 
-pub mod config;
-pub use config::*;
-
-pub mod web_util;
-pub use web_util::*;
+use std::fmt::Display;
 
 pub use anyhow::anyhow;
 pub use chrono::*;
 use coap::client::{CoAPClient, UdpTransport};
-pub use log::*;
 pub use rumqttc::{Event, EventLoop, MqttOptions, Packet, QoS};
-use std::fmt::Display;
+pub use tracing::*;
+
+pub use config::*;
+pub use web_util::*;
+
+pub mod config;
+
+pub mod web_util;
 
 pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let starttime = Utc::now()
@@ -71,10 +73,10 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
 }
 
 pub async fn coap_send<S1, S2, S3>(enabled: bool, url: S1, key: S2, value: S3) -> anyhow::Result<()>
-where
-    S1: AsRef<str> + Display,
-    S2: AsRef<str> + Display,
-    S3: AsRef<str> + Display,
+    where
+        S1: AsRef<str> + Display,
+        S2: AsRef<str> + Display,
+        S3: AsRef<str> + Display,
 {
     if !enabled {
         return Ok(());
@@ -88,7 +90,7 @@ where
         payload.into_bytes(),
         std::time::Duration::new(5, 0),
     )
-    .await?;
+        .await?;
     info!("<-- {res:?}");
     Ok(())
 }
@@ -99,9 +101,9 @@ pub async fn mqtt_send<S1, S2>(
     client_id: S1,
     value: S2,
 ) -> anyhow::Result<()>
-where
-    S1: AsRef<str> + Display,
-    S2: AsRef<str> + Display,
+    where
+        S1: AsRef<str> + Display,
+        S2: AsRef<str> + Display,
 {
     if !enabled {
         return Ok(());

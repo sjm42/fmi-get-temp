@@ -1,8 +1,10 @@
 // config.rs
 
-use clap::Parser;
-use log::*;
 use std::env;
+
+use clap::Parser;
+
+use crate::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct OptsCommon {
@@ -14,8 +16,8 @@ pub struct OptsCommon {
     pub trace: bool,
 
     #[arg(
-        long,
-        default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
+    long,
+    default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
     )]
     pub fmi_url: String,
 
@@ -57,26 +59,26 @@ pub struct OptsCommon {
 }
 
 impl OptsCommon {
-    pub fn finish(&mut self) -> anyhow::Result<()> {
+    pub fn finalize(&mut self) -> anyhow::Result<()> {
         Ok(())
     }
-    pub fn get_loglevel(&self) -> LevelFilter {
+
+    pub fn get_loglevel(&self) -> Level {
         if self.trace {
-            LevelFilter::Trace
+            Level::TRACE
         } else if self.debug {
-            LevelFilter::Debug
-        } else if self.verbose {
-            LevelFilter::Info
+            Level::DEBUG
         } else {
-            LevelFilter::Error
+            Level::INFO
         }
     }
-    pub fn start_pgm(&self, name: &str) {
-        env_logger::Builder::new()
-            .filter_module(env!("CARGO_PKG_NAME"), self.get_loglevel())
-            .filter_module(name, self.get_loglevel())
-            .format_timestamp_secs()
+
+    pub fn start_pgm(&self) {
+        tracing_subscriber::fmt()
+            .with_max_level(self.get_loglevel())
+            .with_target(false)
             .init();
+
         info!(
             "Starting up {} v{}...",
             env!("CARGO_PKG_NAME"),
