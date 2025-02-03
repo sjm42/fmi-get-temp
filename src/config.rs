@@ -16,8 +16,8 @@ pub struct OptsCommon {
     pub trace: bool,
 
     #[arg(
-    long,
-    default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
+        long,
+        default_value = "http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###"
     )]
     pub fmi_url: String,
 
@@ -32,7 +32,7 @@ pub struct OptsCommon {
     #[arg(long, default_value = "101118")]
     pub fmi_sid: String,
 
-    #[arg(long, default_value_t = 10)]
+    #[arg(long, default_value_t = 60)]
     pub fmi_mins: i64,
 
     // MQTT support
@@ -81,10 +81,7 @@ impl OptsCommon {
             .with_target(false)
             .init();
 
-        info!(
-            "Starting up {name} v{}...",
-            env!("CARGO_PKG_VERSION")
-        );
+        info!("Starting up {name} v{}...", env!("CARGO_PKG_VERSION"));
         debug!("Git branch: {}", env!("GIT_BRANCH"));
         debug!("Git commit: {}", env!("GIT_COMMIT"));
         debug!("Source timestamp: {}", env!("SOURCE_TIMESTAMP"));
