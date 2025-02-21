@@ -2,23 +2,22 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.3.3"
+version = "1.4.0"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"
 readme = "README.md"
 keywords = ["fmi", "temperature"]
 license = "MIT OR Apache-2.0"
-edition = "2021"
+edition = "2024"
 resolver = "2"
 
 
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-coap = { version = "0.18", default-features = false }
+coap = { version = "0.19", default-features = false }
 chrono = "0"
-chrono-tz = "0"
 reqwest = { version = "0", features = [
     "brotli",
     "deflate",
@@ -29,9 +28,6 @@ reqwest = { version = "0", features = [
 ], default-features = false }
 roxmltree = "0"
 rumqttc = "0"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-shellexpand = { version = "3", features = ["full"] }
 tokio = { version = "1", features = ["full"] }
 tracing = { version = "0", features = ["log"] }
 tracing-subscriber = "0"
