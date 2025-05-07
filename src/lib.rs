@@ -44,7 +44,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let last_tvp = ser
         .descendants()
         .filter(|n| n.has_tag_name("MeasurementTVP"))
-        .last()
+        .next_back()
         .ok_or(anyhow!("no TVPs"))?;
 
     let time = last_tvp
@@ -52,7 +52,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
         .find(|n| n.is_element() && n.has_tag_name("time"))
         .ok_or(anyhow!("no time"))?
         .children()
-        .last()
+        .next_back()
         .ok_or(anyhow!("no time"))?
         .text()
         .ok_or(anyhow!("no time"))?;
@@ -63,7 +63,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
         .find(|n| n.is_element() && n.has_tag_name("value"))
         .ok_or(anyhow!("no value"))?
         .children()
-        .last()
+        .next_back()
         .ok_or(anyhow!("no value"))?
         .text()
         .ok_or(anyhow!("no value"))?;
@@ -73,10 +73,10 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
 }
 
 pub async fn coap_send<S1, S2, S3>(enabled: bool, url: S1, key: S2, value: S3) -> anyhow::Result<()>
-    where
-        S1: AsRef<str> + Display,
-        S2: AsRef<str> + Display,
-        S3: AsRef<str> + Display,
+where
+    S1: AsRef<str> + Display,
+    S2: AsRef<str> + Display,
+    S3: AsRef<str> + Display,
 {
     if !enabled {
         return Ok(());
@@ -101,9 +101,9 @@ pub async fn mqtt_send<S1, S2>(
     client_id: S1,
     value: S2,
 ) -> anyhow::Result<()>
-    where
-        S1: AsRef<str> + Display,
-        S2: AsRef<str> + Display,
+where
+    S1: AsRef<str> + Display,
+    S2: AsRef<str> + Display,
 {
     if !enabled {
         return Ok(());
