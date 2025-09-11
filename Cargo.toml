@@ -18,14 +18,16 @@ anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 coap = { version = "0.19", default-features = false }
 chrono = "0"
-reqwest = { version = "0", features = [
+reqwest = { version = "0", default-features = false, features = [
     "brotli",
+    "charset",
     "deflate",
     "gzip",
+    "http2",
     "json",
     "rustls-tls",
     "trust-dns",
-], default-features = false }
+] }
 roxmltree = "0"
 rumqttc = "0"
 tokio = { version = "1", features = ["full"] }
