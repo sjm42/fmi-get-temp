@@ -527,7 +527,7 @@ dependencies = [
 
 [[package]]
 name = "fmi_get_temp"
-version = "1.4.1"
+version = "1.4.2"
 dependencies = [
  "anyhow",
  "build-data",
