@@ -339,9 +339,9 @@ dependencies = [
 
 [[package]]
 name = "coap"
-version = "0.19.1"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e91c0f1468cd10f768d878ea5b2d0461c41c47455a1b94c5d521deb1b72539a9"
+checksum = "312161fe09ff02e4d1246ef5ac083db97f708bb28406c52ba588be74fb84a7be"
 dependencies = [
  "async-trait",
  "coap-lite",
@@ -357,9 +357,9 @@ dependencies = [
 
 [[package]]
 name = "coap-lite"
-version = "0.11.5"
+version = "0.13.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d72f4fbcb650652c4b7d980390cf8af49a738422ac66718bd516ec3430b83a6"
+checksum = "87d56a0c1bcd331e7758fd3dd95ed7dd87d118a3b7dc57d60332e17bc97c3f91"
 dependencies = [
  "coap-message 0.2.3",
  "coap-message 0.3.6",
@@ -503,7 +503,7 @@ dependencies = [
 
 [[package]]
 name = "fmi_get_temp"
-version = "1.4.2"
+version = "1.4.3"
 dependencies = [
  "anyhow",
  "build-data",

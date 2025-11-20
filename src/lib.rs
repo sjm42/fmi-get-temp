@@ -18,7 +18,7 @@ pub mod web_util;
 pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let starttime = Utc::now()
         .checked_sub_signed(Duration::try_minutes(opts.fmi_mins).unwrap_or_default())
-        .unwrap()
+        .unwrap_or_default()
         .format("%Y-%m-%dT%H:%M:%SZ")
         .to_string();
     let url = opts
@@ -126,7 +126,7 @@ where
         .await?;
 
     loop {
-        let ev = eventloop.poll().await.unwrap();
+        let ev = eventloop.poll().await?;
         debug!("Received = {ev:#?}");
         if let Event::Incoming(Packet::PubAck(_)) = ev {
             debug!("Got ack, exit.");

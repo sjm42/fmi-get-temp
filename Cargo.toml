@@ -2,7 +2,7 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.4.2"
+version = "1.4.3"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"
@@ -16,7 +16,7 @@ resolver = "2"
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-coap = { version = "0.19", default-features = false }
+coap = { version = "0.22", default-features = false }
 chrono = "0"
 reqwest = { version = "0", default-features = false, features = [
     "brotli",
