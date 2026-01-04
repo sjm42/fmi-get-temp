@@ -2,7 +2,7 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.4.3"
+version = "1.4.4"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"

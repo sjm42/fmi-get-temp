@@ -1,12 +1,14 @@
 // lib.rs
 
-use std::fmt::Display;
+pub use std::{env, fmt::Display, time};
 
 pub use anyhow::anyhow;
 pub use chrono::*;
-use coap::client::{CoAPClient, UdpTransport};
-pub use rumqttc::{Event, EventLoop, MqttOptions, Packet, QoS};
+pub use clap::Parser;
 pub use tracing::*;
+
+use coap::client::{CoAPClient, UdpTransport};
+use rumqttc::{MqttOptions, Packet, QoS};
 
 pub use config::*;
 pub use web_util::*;
@@ -16,7 +18,7 @@ pub mod config;
 pub mod web_util;
 
 pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
-    let starttime = Utc::now()
+    let start_time = Utc::now()
         .checked_sub_signed(Duration::try_minutes(opts.fmi_mins).unwrap_or_default())
         .unwrap_or_default()
         .format("%Y-%m-%dT%H:%M:%SZ")
@@ -24,11 +26,11 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     let url = opts
         .fmi_url
         .replace("###FMI_SID###", &opts.fmi_sid)
-        .replace("###START_TIME###", &starttime);
+        .replace("###START_TIME###", &start_time);
 
     info!("Getting url {url}");
 
-    let (body, ct) = get_text_body(url).await?.ok_or(anyhow!("No body!"))?;
+    let (body, ct) = get_text_body(&url).await?.ok_or(anyhow!("No body!"))?;
     debug!("result:\nContent-type: {ct}\n{body:?}");
 
     let xml = roxmltree::Document::parse(&body)?;
@@ -43,8 +45,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
 
     let last_tvp = ser
         .descendants()
-        .filter(|n| n.has_tag_name("MeasurementTVP"))
-        .next_back()
+        .rfind(|n| n.has_tag_name("MeasurementTVP"))
         .ok_or(anyhow!("no TVPs"))?;
 
     let time = last_tvp
@@ -72,12 +73,7 @@ pub async fn get_temp(opts: &OptsCommon) -> anyhow::Result<String> {
     Ok(value.to_string())
 }
 
-pub async fn coap_send<S1, S2, S3>(enabled: bool, url: S1, key: S2, value: S3) -> anyhow::Result<()>
-where
-    S1: AsRef<str> + Display,
-    S2: AsRef<str> + Display,
-    S3: AsRef<str> + Display,
-{
+pub async fn coap_send(enabled: bool, url: &str, key: &str, value: &str) -> anyhow::Result<()> {
     if !enabled {
         return Ok(());
     }
@@ -85,50 +81,35 @@ where
     let payload = format!("{key} {value}");
     info!("*** CoAP POST {url} <-- {payload}");
 
-    let res = CoAPClient::<UdpTransport>::post_with_timeout(
-        url.as_ref(),
-        payload.into_bytes(),
-        std::time::Duration::new(5, 0),
-    )
-        .await?;
+    let res =
+        CoAPClient::<UdpTransport>::post_with_timeout(url, payload.into_bytes(), time::Duration::new(5, 0)).await?;
     info!("<-- {res:?}");
     Ok(())
 }
 
-pub async fn mqtt_send<S1, S2>(
-    enabled: bool,
-    opts: &OptsCommon,
-    client_id: S1,
-    value: S2,
-) -> anyhow::Result<()>
-where
-    S1: AsRef<str> + Display,
-    S2: AsRef<str> + Display,
-{
+pub async fn mqtt_send(enabled: bool, opts: &OptsCommon, client_id: &str, value: &str) -> anyhow::Result<()> {
     if !enabled {
         return Ok(());
     }
 
-    let mut mqttoptions = MqttOptions::new(client_id.as_ref(), &opts.mqtt_host, opts.mqtt_port);
-    mqttoptions
-        .set_keep_alive(std::time::Duration::from_secs(25))
+    let mut mqtt_options = MqttOptions::new(client_id, &opts.mqtt_host, opts.mqtt_port);
+    mqtt_options
+        .set_keep_alive(time::Duration::from_secs(25))
         .set_clean_session(false);
 
     if let (Some(username), Some(password)) = (&opts.mqtt_username, &opts.mqtt_password) {
-        mqttoptions.set_credentials(username, password);
+        mqtt_options.set_credentials(username, password);
     }
 
-    let msg = format!("{{ \"temperature\": {} }}", value.as_ref());
+    let msg = format!("{{ \"temperature\": {value} }}");
     info!("Publish MQTT: {} <-- {}", opts.mqtt_topic, msg);
-    let (client, mut eventloop) = rumqttc::AsyncClient::new(mqttoptions, 42);
-    client
-        .publish(&opts.mqtt_topic, QoS::AtLeastOnce, true, msg)
-        .await?;
+    let (client, mut eventloop) = rumqttc::AsyncClient::new(mqtt_options, 42);
+    client.publish(&opts.mqtt_topic, QoS::AtLeastOnce, true, msg).await?;
 
     loop {
         let ev = eventloop.poll().await?;
         debug!("Received = {ev:#?}");
-        if let Event::Incoming(Packet::PubAck(_)) = ev {
+        if let rumqttc::Event::Incoming(Packet::PubAck(_)) = ev {
             debug!("Got ack, exit.");
             break;
         }

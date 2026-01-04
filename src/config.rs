@@ -1,9 +1,5 @@
 // config.rs
 
-use std::env;
-
-use clap::Parser;
-
 use crate::*;
 
 #[derive(Debug, Clone, Parser)]
@@ -59,10 +55,6 @@ pub struct OptsCommon {
 }
 
 impl OptsCommon {
-    pub fn finalize(&mut self) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     pub fn get_loglevel(&self) -> Level {
         if self.trace {
             Level::TRACE

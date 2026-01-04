@@ -1,14 +1,11 @@
 // bin/fmi_get_temp.rs
 
-use clap::Parser;
-
 use fmi_get_temp::*;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let me = env!("CARGO_BIN_NAME");
-    let mut opts = OptsCommon::parse();
-    opts.finalize()?;
+    let opts = OptsCommon::parse();
     opts.start_pgm(me);
 
     let t = get_temp(&opts).await?;
