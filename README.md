@@ -23,27 +23,23 @@ Example values:
 * Salla Naruska: fmisid 101966
 
 ```
+Usage: fmi_get_temp [OPTIONS]
 
-USAGE:
-    fmi_get_temp [FLAGS] [OPTIONS]
-
-FLAGS:
-        --coap-enabled    
-    -d, --debug           
-    -h, --help            Prints help information
-        --mqtt-enabled    
-    -t, --trace           
-    -V, --version         Prints version information
-    -v, --verbose         
-
-OPTIONS:
-        --coap-key <coap-key>         [default: temperature]
-        --coap-url <coap-url>         [default: coap://localhost/store]
-        --fmi-sid <fmi-sid>           [default: 101118]
-        --fmi-url <fmi-url>           [default:
-                                     http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###]
-        --mqtt-host <mqtt-host>       [default: localhost]
-        --mqtt-port <mqtt-port>       [default: 1883]
-        --mqtt-topic <mqtt-topic>     [default: fmi_temp/101118]
-
+Options:
+  -v, --verbose
+  -d, --debug
+  -t, --trace
+      --fmi-url <FMI_URL>              [default: http://opendata.fmi.fi/wfs/fin?service=WFS&version=2.0.0&request=GetFeature&storedquery_id=fmi::observations::weather::timevaluepair&parameters=t2m&fmisid=###FMI_SID###&starttime=###START_TIME###]
+      --fmi-sid <FMI_SID>              [default: 101118]
+      --fmi-mins <FMI_MINS>            [default: 60]
+      --mqtt-enabled
+      --mqtt-host <MQTT_HOST>          [default: localhost]
+      --mqtt-port <MQTT_PORT>          [default: 1883]
+      --mqtt-topic <MQTT_TOPIC>        [default: fmi_temp/101118]
+      --mqtt-username <MQTT_USERNAME>
+      --mqtt-password <MQTT_PASSWORD>
+      --coap-enabled
+      --coap-url <COAP_URL>            [default: coap://localhost/store]
+      --coap-key <COAP_KEY>            [default: temperature]
+  -h, --help                           Print help
 ```
