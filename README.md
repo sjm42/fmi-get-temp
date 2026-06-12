@@ -1,18 +1,18 @@
 # FMI get temperature
 
-The program fetches the latest temperature readings from Ilmatieteen Laitos (FMI) at given location (by fmisid)
-and parses the received XML.
+`fmi_get_temp` fetches the latest temperature reading from the Finnish
+Meteorological Institute (FMI) open data API for a configured station ID
+(`fmisid`). It parses the FMI WFS XML response, prints the most recent
+temperature to stdout, and can optionally forward the reading with MQTT and/or
+CoAP.
 
-It then prints the most recent temperature reading to stdout if no other options are given.
+## Station IDs
 
-Additionally, it can send the data with MQTT publish message and/or CoAP POST request
-if either or both of those options are enabled.
-
-A list of stations can be found here with fmisid values:
+A list of FMI stations and `fmisid` values is available here:
 
 <https://www.ilmatieteenlaitos.fi/havaintoasemat>
 
-Example values:
+Common examples:
 
 * Helsinki-Vantaa lentoasema: fmisid 100968
 * Pirkkala lentoasema: fmisid 101118
@@ -21,6 +21,28 @@ Example values:
 * Rovaniemi lentoasema: fmisid 101920
 * Kittilä lentoasema: fmisid 101986
 * Salla Naruska: fmisid 101966
+
+## Usage
+
+Fetch the default station:
+
+```sh
+cargo run -- --fmi-sid 101118
+```
+
+Enable MQTT publishing:
+
+```sh
+cargo run -- --mqtt-enabled --mqtt-host localhost --mqtt-topic fmi_temp/101118
+```
+
+Enable CoAP publishing:
+
+```sh
+cargo run -- --coap-enabled --coap-url coap://localhost/store --coap-key temperature
+```
+
+CLI options:
 
 ```
 Usage: fmi_get_temp [OPTIONS]
@@ -43,3 +65,25 @@ Options:
       --coap-key <COAP_KEY>            [default: temperature]
   -h, --help                           Print help
 ```
+
+## Development
+
+Useful commands:
+
+```sh
+cargo build
+cargo build --release
+cargo build --profile minsize
+cargo test
+cargo fmt
+cargo clippy --all-targets --all-features
+```
+
+Check dependency status with:
+
+```sh
+cargo outdated --workspace --root-deps-only
+cargo update --dry-run
+```
+
+See [AGENTS.md](AGENTS.md) for contributor guidelines.

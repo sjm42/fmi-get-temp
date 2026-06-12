@@ -2,7 +2,7 @@
 
 [package]
 name = "fmi_get_temp"
-version = "1.4.5"
+version = "1.4.6"
 authors = ["Sami J. Mäkinen <sjm@iki.fi>"]
 description = "FMI get temperature reading"
 repository = "https://github.com/sjm42/fmi-get-temp"
@@ -16,17 +16,17 @@ resolver = "2"
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-coap = { version = "0.22", default-features = false }
+coap = { version = "0.26", default-features = false }
 chrono = "0"
-reqwest = { version = "0", default-features = false, features = [
+reqwest = { version = "0.13", default-features = false, features = [
     "brotli",
     "charset",
     "deflate",
     "gzip",
     "http2",
     "json",
-    "rustls-tls",
-    "trust-dns",
+    "rustls",
+    "hickory-dns",
 ] }
 roxmltree = "0"
 rumqttc = "0"

@@ -41,7 +41,7 @@ pub async fn get_body(url_s: &str) -> anyhow::Result<(String, String)> {
             .ok_or(anyhow!("No content-type in response"))?
             .as_bytes(),
     )
-        .to_string();
+    .to_string();
 
     let body = resp.text().await?;
     Ok((body, ct))
