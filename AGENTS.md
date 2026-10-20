@@ -4,7 +4,7 @@
 
 This is a Rust 2024 Cargo project for the `fmi_get_temp` CLI. `src/lib.rs` exports FMI fetching and MQTT/CoAP publishing functions. CLI parsing and runtime startup live in `src/bin/fmi_get_temp.rs`. Configuration flags are in `src/config.rs`, and HTTP helper code is in `src/web_util.rs`.
 
-There is no dedicated `tests/` directory yet. Add integration tests there for cross-module behavior, and place small unit tests next to code under `#[cfg(test)]` modules.
+Integration tests live in `tests/`, with shared network helpers and XML fixtures in its subdirectories. Place small unit tests next to code under `#[cfg(test)]` modules. Network tests must have deadlines, and subprocess tests must terminate their child processes on timeout.
 
 ## Build, Test, and Development Commands
 

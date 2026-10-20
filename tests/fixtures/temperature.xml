@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs/2.0"
+    xmlns:omso="http://inspire.ec.europa.eu/schemas/omso/3.0"
+    xmlns:om="http://www.opengis.net/om/2.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:wml2="http://www.opengis.net/waterml/2.0">
+    <wfs:member>
+        <omso:PointTimeSeriesObservation>
+            <om:observedProperty xlink:href="https://opendata.fmi.fi/meta?param=t2m&amp;language=fin"/>
+            <om:featureOfInterest>
+                <gml:identifier codeSpace="http://xml.fmi.fi/namespace/stationcode/fmisid">101118</gml:identifier>
+            </om:featureOfInterest>
+            <om:result>
+                <wml2:MeasurementTimeseries>
+                    <wml2:point><wml2:MeasurementTVP>
+                        <wml2:time>2026-10-20T08:00:00Z</wml2:time>
+                        <wml2:value>1.5</wml2:value>
+                    </wml2:MeasurementTVP></wml2:point>
+                    <wml2:point><wml2:MeasurementTVP>
+                        <wml2:time>2026-10-20T11:15:00+03:00</wml2:time>
+                        <wml2:value>2.5</wml2:value>
+                    </wml2:MeasurementTVP></wml2:point>
+                    <wml2:point><wml2:MeasurementTVP>
+                        <wml2:time>2026-10-20T07:45:00Z</wml2:time>
+                        <wml2:value>0.5</wml2:value>
+                    </wml2:MeasurementTVP></wml2:point>
+                </wml2:MeasurementTimeseries>
+            </om:result>
+        </omso:PointTimeSeriesObservation>
+    </wfs:member>
+</wfs:FeatureCollection>
